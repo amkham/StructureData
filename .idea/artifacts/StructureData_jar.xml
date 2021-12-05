@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="StructureData:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/StructureData_jar</output-path>
+    <root id="root">
+      <element id="archive" name="StructureData.jar">
+        <element id="module-output" name="StructureData" />
+      </element>
+      <element id="library" level="project" name="lib" />
+    </root>
+  </artifact>
+</component>

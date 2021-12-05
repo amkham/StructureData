@@ -1,128 +1,80 @@
 package com.company;
 
 import rzp.oop.filesystem.FileSystem;
-import rzp.oop.filesystem.FileSystemExtra;
 
 import java.io.*;
-import java.security.Permission;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
+import java.util.*;
 import java.util.regex.Pattern;
 
-public class FileManager implements FileSystem{
+public class FileManager implements FileSystem {
 
+    private final HashMap<String, String> fileSystem = new HashMap<>();
 
 
     @Override
     public void createFile(String fileName, String text) {
 
-        File file = new File(fileName);
-
-        if (!file.exists()) {
-
-            try {
-                FileWriter fileWriter = new FileWriter(file, false);
-                fileWriter.write(text);
-                fileWriter.flush();
-                fileWriter.close();
-                System.out.println("File created...");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("File exists!!!");
-        }
+        fileSystem.put(fileName, text);
 
     }
 
     @Override
     public String readFile(String fileName) {
 
-        StringBuilder stringBuilder = new StringBuilder();
 
-            try {
-                int sym;
-                FileReader fileReader = new FileReader(fileName);
-                while ((sym = fileReader.read()) != -1) {
-                    stringBuilder.append((char) sym);
-                }
+        return fileSystem.getOrDefault(fileName, null);
 
-                fileReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-
-        return stringBuilder.toString();
     }
 
     @Override
     public void deleteFile(String fileName) {
 
-            File file = new File(fileName);
-            if (file.exists()) {
-                file.delete();
-            } else System.out.println("File exists!");
-
+        fileSystem.remove(fileName);
 
     }
 
     @Override
     public void moveFile(String oldFileName, String newFileName) {
 
-            createFile(newFileName, readFile(oldFileName));
-            deleteFile(oldFileName);
 
+        createFile(newFileName, fileSystem.get(oldFileName));
+        deleteFile(oldFileName);
 
     }
 
     @Override
     public List<String> searchFiles(String fileNamePart) {
 
-        File folder = new File(".");
         List<String> result = new ArrayList<>();
+        Set<String> keys = fileSystem.keySet();
 
-        for (String f : Objects.requireNonNull(folder.list())) {
-            if (Pattern.matches(".*" + fileNamePart + ".*", f)) {
-                result.add(f);
+        for (String k: keys)
+        {
+            if (k.contains(fileNamePart))
+            {
+                result.add(k);
             }
-
         }
+
         return result;
+
     }
 
     @Override
     public void changeFile(String fileName, String newText) {
 
-            writeInFile(fileName, newText, false);
+       fileSystem.put(fileName, newText);
     }
 
     @Override
     public void appendFile(String fileName, String appendText) {
 
-
-            writeInFile(fileName, appendText, true);
+        String oldText = fileSystem.get(fileName);
+        fileSystem.put(fileName, oldText + appendText);
 
     }
 
 
-    private void writeInFile(String filename, String text, Boolean appendMode) {
-        File file = new File(filename);
-
-        if (!file.exists()) {
-            try {
-                FileWriter fileWriter = new FileWriter(file, appendMode);
-                fileWriter.write(text);
-                fileWriter.flush();
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
 
 }
