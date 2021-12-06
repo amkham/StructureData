@@ -1,12 +1,13 @@
 package com.company;
 
 import rzp.oop.filesystem.FileSystem;
+import rzp.oop.filesystem.FileSystemExtra;
 
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class FileManager implements FileSystem {
+public class FileManager implements FileSystem, FileSystemExtra {
 
     private final HashMap<String, String> fileSystem = new HashMap<>();
 
@@ -75,7 +76,14 @@ public class FileManager implements FileSystem {
     }
 
 
+    @Override
+    public void setWritable(String fileName, boolean writable) {
 
+    }
 
+    @Override
+    public void setReadable(String fileName, boolean readable) {
+
+    }
 }
 
