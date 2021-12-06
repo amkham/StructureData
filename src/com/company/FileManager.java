@@ -9,28 +9,40 @@ import java.util.regex.Pattern;
 
 public class FileManager implements FileSystem, FileSystemExtra {
 
-    private final HashMap<String, String> fileSystem = new HashMap<>();
+    private final HashMap<String, MyFile> fileSystem = new HashMap<>();
 
 
     @Override
     public void createFile(String fileName, String text) {
 
-        fileSystem.put(fileName, text);
+        MyFile file = new MyFile();
+        file.setText(text);
+        fileSystem.put(fileName, file);
 
     }
 
     @Override
     public String readFile(String fileName) {
 
+        MyFile file = fileSystem.get(fileName);
+        if (file.getReadable())
+        {
+            return file.getText();
+        }
+        else return null;
 
-        return fileSystem.getOrDefault(fileName, null);
 
     }
 
     @Override
     public void deleteFile(String fileName) {
 
-        fileSystem.remove(fileName);
+        MyFile file = fileSystem.get(fileName);
+        if (file.getWritable())
+        {
+            fileSystem.remove(fileName);
+        }
+
 
     }
 
@@ -38,8 +50,13 @@ public class FileManager implements FileSystem, FileSystemExtra {
     public void moveFile(String oldFileName, String newFileName) {
 
 
-        createFile(newFileName, fileSystem.get(oldFileName));
-        deleteFile(oldFileName);
+        MyFile file = fileSystem.get(oldFileName);
+        if (file.getWritable() && file.getReadable())
+        {
+            createFile(newFileName, fileSystem.get(oldFileName).getText());
+            deleteFile(oldFileName);
+        }
+
 
     }
 
@@ -64,14 +81,26 @@ public class FileManager implements FileSystem, FileSystemExtra {
     @Override
     public void changeFile(String fileName, String newText) {
 
-       fileSystem.put(fileName, newText);
+        MyFile file = fileSystem.get(fileName);
+        if (file.getWritable())
+        {
+            file.setText(newText);
+            fileSystem.put(fileName, file);
+        }
+
     }
 
     @Override
     public void appendFile(String fileName, String appendText) {
 
-        String oldText = fileSystem.get(fileName);
-        fileSystem.put(fileName, oldText + appendText);
+        MyFile file = fileSystem.get(fileName);
+        if (file.getWritable() && file.getReadable())
+        {
+            String oldText = file.getText();
+            file.setText(oldText + appendText);
+            fileSystem.put(fileName, file);
+        }
+
 
     }
 
@@ -79,11 +108,15 @@ public class FileManager implements FileSystem, FileSystemExtra {
     @Override
     public void setWritable(String fileName, boolean writable) {
 
+        MyFile file = fileSystem.get(fileName);
+        file.setWritable(writable);
+
     }
 
     @Override
     public void setReadable(String fileName, boolean readable) {
-
+        MyFile file = fileSystem.get(fileName);
+        file.setWritable(readable);
     }
 }
 
