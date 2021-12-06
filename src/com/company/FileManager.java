@@ -25,7 +25,7 @@ public class FileManager implements FileSystem, FileSystemExtra {
     public String readFile(String fileName) {
 
         MyFile file = fileSystem.get(fileName);
-        if (file.getReadable())
+        if (file != null && file.getReadable())
         {
             return file.getText();
         }
@@ -38,7 +38,7 @@ public class FileManager implements FileSystem, FileSystemExtra {
     public void deleteFile(String fileName) {
 
         MyFile file = fileSystem.get(fileName);
-        if (file.getWritable())
+        if (file != null && file.getWritable())
         {
             fileSystem.remove(fileName);
         }
@@ -51,7 +51,7 @@ public class FileManager implements FileSystem, FileSystemExtra {
 
 
         MyFile file = fileSystem.get(oldFileName);
-        if (file.getWritable() && file.getReadable())
+        if (file != null && file.getWritable() && file.getReadable())
         {
             createFile(newFileName, fileSystem.get(oldFileName).getText());
             deleteFile(oldFileName);
@@ -82,7 +82,7 @@ public class FileManager implements FileSystem, FileSystemExtra {
     public void changeFile(String fileName, String newText) {
 
         MyFile file = fileSystem.get(fileName);
-        if (file.getWritable())
+        if (file != null && file.getWritable())
         {
             file.setText(newText);
             fileSystem.put(fileName, file);
@@ -94,7 +94,7 @@ public class FileManager implements FileSystem, FileSystemExtra {
     public void appendFile(String fileName, String appendText) {
 
         MyFile file = fileSystem.get(fileName);
-        if (file.getWritable() && file.getReadable())
+        if (file != null && file.getWritable() && file.getReadable())
         {
             String oldText = file.getText();
             file.setText(oldText + appendText);
@@ -109,14 +109,21 @@ public class FileManager implements FileSystem, FileSystemExtra {
     public void setWritable(String fileName, boolean writable) {
 
         MyFile file = fileSystem.get(fileName);
-        file.setWritable(writable);
+        if (file != null)
+        {
+            file.setWritable(writable);
+        }
+
 
     }
 
     @Override
     public void setReadable(String fileName, boolean readable) {
         MyFile file = fileSystem.get(fileName);
-        file.setWritable(readable);
+        if (file != null)
+        {
+            file.setReadable(readable);
+        }
     }
 }
 

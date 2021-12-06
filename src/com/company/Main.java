@@ -4,6 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
 	FileManager fileManager = new FileManager();
-    fileManager.createFile("test2.txt", "testttt");
+    fileManager.createFile("test", "sdsdgsgd");
+    System.out.println(fileManager.readFile("test2"));
     }
 }
